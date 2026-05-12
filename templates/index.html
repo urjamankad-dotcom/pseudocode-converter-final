@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PseudoCode Converter — Python · Java · C++</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-badge">🎓 Free for MCA Students · LJ University</div>
+    <h1 class="hero-title">
+      Pseudocode <span class="accent">→</span><br>
+      Python · Java · C++
+    </h1>
+    <p class="hero-sub">
+      Paste any algorithm pseudocode and get working code in all three languages —
+      with line-by-line explanations. Perfect for DSA prep and lab records.
+    </p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">Languages at once</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-num">Free</span><span class="stat-label">First 3 conversions</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-num">₹99</span><span class="stat-label">Lifetime unlock</span></div>
+    </div>
+    <a href="#converter" class="hero-cta">Try it now ↓</a>
+  </section>
+
+  <!-- ── CONVERTER ── -->
+  <section class="converter-section" id="converter">
+    <div class="container">
+
+      <!-- Input Panel -->
+      <div class="input-panel">
+        <div class="panel-header">
+          <span class="panel-title">Your Pseudocode</span>
+          <span class="char-count" id="charCount">0 / 2000</span>
+        </div>
+
+        <!-- Example buttons -->
+        <div class="examples-row">
+          <span class="examples-label">Try:</span>
+          <button class="example-pill" data-example="bubble">Bubble Sort</button>
+          <button class="example-pill" data-example="binary">Binary Search</button>
+          <button class="example-pill" data-example="factorial">Factorial</button>
+          <button class="example-pill" data-example="fibonacci">Fibonacci</button>
+        </div>
+
+        <textarea
+          id="pseudoInput"
+          placeholder="Paste your pseudocode here...&#10;&#10;Example:&#10;SET n = 5&#10;SET result = 1&#10;FOR i FROM 1 TO n&#10;    result = result * i&#10;PRINT result"
+          maxlength="2000"
+        ></textarea>
+
+        <!-- Error banner -->
+        <div class="error-banner" id="errorBanner" style="display:none"></div>
+
+        <button class="convert-btn" id="convertBtn" onclick="handleConvert()">
+          <span class="btn-text">Convert</span>
+          <span class="btn-loader" style="display:none">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </span>
+        </button>
+
+        <p class="usage-note" id="usageNote"></p>
+      </div>
+
+      <!-- Output Grid -->
+      <div class="output-grid" id="outputGrid" style="display:none">
+
+        <!-- Python -->
+        <div class="lang-card" id="card-python">
+          <div class="lang-header python-header">
+            <div class="lang-info">
+              <span class="lang-icon">🐍</span>
+              <span class="lang-name">Python</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode('python')">Copy</button>
+          </div>
+          <pre class="line-numbers lang-card-pre"><code class="language-python" id="code-python"></code></pre>
+        </div>
+
+        <!-- Java -->
+        <div class="lang-card" id="card-java">
+          <div class="lang-header java-header">
+            <div class="lang-info">
+              <span class="lang-icon">☕</span>
+              <span class="lang-name">Java</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode('java')">Copy</button>
+          </div>
+          <pre class="line-numbers lang-card-pre"><code class="language-java" id="code-java"></code></pre>
+        </div>
+
+        <!-- C++ -->
+        <div class="lang-card" id="card-cpp">
+          <div class="lang-header cpp-header">
+            <div class="lang-info">
+              <span class="lang-icon">⚡</span>
+              <span class="lang-name">C++</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode('cpp')">Copy</button>
+          </div>
+          <pre class="line-numbers lang-card-pre"><code class="language-cpp" id="code-cpp"></code></pre>
+        </div>
+
+        <!-- Commentary -->
+        <div class="commentary-card" id="commentaryCard">
+          <div class="commentary-header">
+            <span>📖 Line-by-Line Explanation</span>
+          </div>
+          <div class="commentary-body" id="commentaryBody"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAYWALL MODAL ── -->
+  <div class="modal-overlay" id="paywallModal" style="display:none">
+    <div class="modal-box">
+      <div class="modal-icon">🔒</div>
+      <h2 class="modal-title">You've used your 3 free conversions</h2>
+      <p class="modal-desc">
+        Unlock <strong>unlimited</strong> conversions forever for just <strong>₹99</strong> — one-time payment, no subscription.
+      </p>
+      <a class="upi-btn" id="upiBtn" href="#" target="_blank">
+        Pay ₹99 via UPI
+      </a>
+      <div class="unlock-row">
+        <input type="text" id="passcodeInput" placeholder="Enter passcode after payment" class="passcode-input" />
+        <button class="unlock-btn" onclick="verifyPasscode()">Unlock</button>
+      </div>
+      <p class="passcode-hint">After payment, WhatsApp your transaction ID to get the passcode.</p>
+      <div class="unlock-error" id="unlockError" style="display:none">❌ Wrong passcode. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <p>Built by <strong>LJ University MCA Faculty</strong> · Powered by Claude AI</p>
+    <p class="footer-sub">₹99 for unlimited access · Pay via UPI · Get passcode instantly</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <script src="/static/js/script.js"></script>
+</body>
+</html>
